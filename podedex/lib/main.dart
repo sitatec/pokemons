@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const App());
@@ -12,8 +13,13 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Pokedex',
       theme: ThemeData(
-        // TODO set appropriated values
-        primarySwatch: Colors.blue,
+        fontFamily: GoogleFonts.notoSans().fontFamily,
+        scaffoldBackgroundColor: const Color(0xFFE8E8E8),
+        primaryColor: const Color(0xFF3558CD),
+        appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              backgroundColor: Colors.white,
+              foregroundColor: const Color(0xFF161A33),
+            ),
       ),
       home: Container(),
     );
