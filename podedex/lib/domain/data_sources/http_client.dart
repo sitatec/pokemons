@@ -1,5 +1,3 @@
-import 'dart:io';
-
 /// A HTTP client
 ///
 /// We will depend only on this class (used here as an interface) to perform HTTP
