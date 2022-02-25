@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:podedex/domain/data_sources/http_client.dart';
 import 'package:podedex/domain/data_sources/pokemon_repository.dart';
 
+import 'fakes/fake_data.dart';
 import 'fakes/fake_favorite_pokemons_cache_store.dart';
 import 'fakes/fake_http_client.dart';
 
@@ -28,7 +29,7 @@ void main() {
       final pokemons = await pokemonRepository.getPokemons();
       expect(
         pokemons.first.id,
-        equals(FakeHttpClient.fakePokemonJson["id"]),
+        equals(fakePokemonJson["id"]),
       );
     });
 

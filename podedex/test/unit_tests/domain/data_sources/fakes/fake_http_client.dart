@@ -1,67 +1,11 @@
 import 'package:podedex/domain/data_sources/constant.dart';
 import 'package:podedex/domain/data_sources/http_client.dart';
 
+import 'fake_data.dart';
+
 // TODO comment
 
 class FakeHttpClient implements HttpClient {
-  static JsonObject fakePokemonJson = {
-    "id": 1,
-    "name": "bulbasaur",
-    "sprites": {
-      "other": {
-        "official-artwork": {"front_default": "fake_url"}
-      }
-    },
-    "height": 7,
-    "weight": 69,
-    "stats": [
-      {
-        "base_stat": 43,
-        "stat": {
-          "name": "hp",
-        }
-      },
-      {
-        "base_stat": 33,
-        "stat": {
-          "name": "attack",
-        }
-      },
-      {
-        "base_stat": 4,
-        "stat": {
-          "name": "defense",
-        }
-      },
-      {
-        "base_stat": 40,
-        "stat": {
-          "name": "special-attack",
-        }
-      },
-      {
-        "base_stat": 80,
-        "stat": {
-          "name": "special-defense",
-        }
-      },
-      {
-        "base_stat": 40,
-        "stat": {
-          "name": "speed",
-        }
-      },
-    ],
-    "types": [
-      {
-        "type": {"name": "grass"}
-      },
-      {
-        "type": {"name": "poison"}
-      }
-    ],
-  };
-
   /// This array contains integer that indicate when to throw a HttpException
   ///
   /// E.g: for [2, 4, 7], an exception will be thrown the second, the fouth and
@@ -88,7 +32,7 @@ class FakeHttpClient implements HttpClient {
       return {"results": results};
     }
     final requestedPokemonId = uri.pathSegments.last;
-    return Map.from(fakePokemonJson)..["id"] = int.parse(requestedPokemonId);
+    return newFakePokemonJson..["id"] = int.parse(requestedPokemonId);
   }
 
   void _throwExceptionIfNeeded() {
