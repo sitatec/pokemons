@@ -24,3 +24,9 @@ abstract class FavoritePokemonsCacheStore {
   /// Remove the pokemon identified by [pokemonId] from the favorites.
   Future<void> removePokemonFromFavorites(int pokemonId);
 }
+
+class FavoritePokemonsCacheException implements Exception {
+  final String message;
+
+  FavoritePokemonsCacheException(this.message);
+}
