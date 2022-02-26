@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:podedex/domain/data_sources/constant.dart';
 import 'package:podedex/domain/data_sources/http_client.dart';
 import 'package:podedex/domain/data_sources/pokemon_repository.dart';
 
@@ -108,6 +110,34 @@ void main() {
         throwsA(isA<HttpException>()),
       );
     });
+
+    test(
+        "It should send GET requests to the right URLs with the correct number of retries",
+        () async {
+      const pageLength = 10;
+      const pageNumber = 3;
+
+      await pokemonRepository.getPokemons(
+        pageLength: pageLength,
+        pageNumber: pageNumber,
+      );
+
+      final getInvocations = [];
+      const offset = pageNumber * pageLength;
+      for (int i = 1; i <= pageLength; i++) {
+        getInvocations.add(
+          httpClient.get("$pokemonEndpoint/${offset + i}", retryCount: 1),
+        );
+      }
+
+      verify([
+        httpClient.get(
+          "$pokemonEndpoint?limit=$pageLength&offset=$offset",
+          retryCount: 2,
+        ),
+        ...getInvocations,
+      ]);
+    });
   });
 
   group('Favorite Pokemon Requests', () {
@@ -188,6 +218,33 @@ void main() {
         ),
         throwsA(isA<HttpException>()),
       );
+    });
+
+    test(
+        "It should send GET requests to the right URLs with the correct number of retries",
+        () async {
+      const pageLength = 10;
+      const pageNumber = 3;
+
+      await pokemonRepository.getFavoritePokemons(
+        pageLength: pageLength,
+        pageNumber: pageNumber,
+      );
+
+      final getInvocations = [];
+      const offset = pageNumber * pageLength;
+
+      for (int i = 2; i <= pageLength; i++) {
+        getInvocations.add(
+          httpClient.get("$pokemonEndpoint/${offset + i}", retryCount: 1),
+        );
+      }
+
+      // For some reason verify(getInvocations) is not working.
+      verify([
+        httpClient.get("$pokemonEndpoint/${offset + 1}", retryCount: 1),
+        ...getInvocations
+      ]);
     });
   });
 }
