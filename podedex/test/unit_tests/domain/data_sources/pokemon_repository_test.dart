@@ -1,22 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:podedex/domain/data_sources/constant.dart';
 import 'package:podedex/domain/data_sources/http_client.dart';
 import 'package:podedex/domain/data_sources/pokemon_repository.dart';
 
 import 'fakes/fake_data.dart';
 import 'fakes/fake_favorite_pokemons_cache_store.dart';
-import 'fakes/fake_http_client.dart';
+import 'fakes/fake_pokemons_remote_data_sources.dart';
 
 void main() {
-  final httpClient = FakeHttpClient();
+  final pokemonsRemoteDataSource = FakePokemonsRemoteDataSource();
+  final fakeFavoritePokemonsCacheStore = FakeFavoritePokemonsCacheStore();
   final pokemonRepository = PokemonRepository(
-    httpClient,
-    FakeFavoritePokemonsCacheStore(),
+    pokemonsRemoteDataSource,
+    fakeFavoritePokemonsCacheStore,
   );
 
   setUp(() {
-    httpClient.resetGetCallsCount();
+    pokemonsRemoteDataSource.exception = null;
+    // Do not throw exception on methods c.
   });
 
   group("Pokemon Requests: ", () {
@@ -75,84 +75,58 @@ void main() {
       );
     });
 
-    test(
-        "It should return the pokemon successfully fetched even if some request failed",
-        () async {
-      // When fetching the pokemon details, if some request failed, that should'nt
-      // affect other requests.
-
-      httpClient.throwException.addAll([3, 5, 9, 15]);
-      const requestedPokemonCount = 20;
-      final successfullRequestsCount =
-          requestedPokemonCount - httpClient.throwException.length;
-
-      final pokemons = await pokemonRepository.getPokemons(
-        pageLength: requestedPokemonCount,
-      );
+    test("It should throw and HttpException", () {
+      final exception = HttpException(statusCode: 500, message: "message");
+      // tell the fake remode data source to throw an exception on the next method call.
+      pokemonsRemoteDataSource.exception = exception;
 
       expect(
-        pokemons.length,
-        equals(successfullRequestsCount),
+        () async => pokemonRepository.getPokemons(),
+        throwsA(
+          isA<HttpException>()
+              .having(
+                (error) => error.message,
+                "message",
+                equals(exception.message),
+              )
+              .having(
+                (error) => error.statusCode,
+                "status code",
+                equals(exception.statusCode),
+              ),
+        ),
       );
     });
 
-    test("It should throw An HttpException if all the request failed",
-        () async {
-      // Throws from the second time the [get] method of the http client is called
-      // because the first one is not for fetching a pokemon details but for
-      // fetching the list of partial data (i.e: list of `{name: "", url: ""}`).
-      httpClient.throwException.addAll([2, 3, 4, 5]);
-
+    test("It should return the number of all the pokemons", () async {
       expect(
-        () async => pokemonRepository.getPokemons(
-          pageLength: httpClient.throwException.length,
-        ),
-        throwsA(isA<HttpException>()),
+        await pokemonRepository.getPokemonsCount(),
+        equals(await pokemonsRemoteDataSource.allPokemonsCount),
       );
     });
 
-    test(
-        "It should send GET requests to the right URLs with the correct number of retries",
-        () async {
-      const pageLength = 10;
-      const pageNumber = 3;
-
-      await pokemonRepository.getPokemons(
-        pageLength: pageLength,
-        pageNumber: pageNumber,
+    test("It should return the number of all the FAVORITE pokemons", () async {
+      expect(
+        await pokemonRepository.getPokemonsCount(favoritesOnly: true),
+        equals(await fakeFavoritePokemonsCacheStore.favoritePokemonsCount),
       );
-
-      final getInvocations = [];
-      const offset = pageNumber * pageLength;
-      for (int i = 1; i <= pageLength; i++) {
-        getInvocations.add(
-          httpClient.get("$pokemonEndpoint/${offset + i}", retryCount: 1),
-        );
-      }
-
-      verify([
-        httpClient.get(
-          "$pokemonEndpoint?limit=$pageLength&offset=$offset",
-          retryCount: 2,
-        ),
-        ...getInvocations,
-      ]);
     });
   });
 
   group('Favorite Pokemon Requests', () {
     test("It should return the favorite pokemons", () async {
-      final favoritePokemons =
-          await pokemonRepository.getFavoritePokemons(pageLength: 5);
+      final favoritePokemons = await pokemonRepository.getPokemons(
+          pageLength: 5, favoritesOnly: true);
       expect(favoritePokemons.length, 5);
     });
 
     test("Pagination on favorite pokemons should work", () async {
       const pageLength = 10;
       const pageNumber = 3;
-      final pokemons = await pokemonRepository.getFavoritePokemons(
+      final pokemons = await pokemonRepository.getPokemons(
         pageNumber: pageNumber,
         pageLength: pageLength,
+        favoritesOnly: true,
       );
       expect(pokemons.first.id, equals((pageLength * pageNumber) + 1));
     });
@@ -160,8 +134,9 @@ void main() {
     test("It should throw a ArgumentError", () async {
       // pageNumber related
       expect(
-        () async => pokemonRepository.getFavoritePokemons(
+        () async => pokemonRepository.getPokemons(
           pageNumber: -1, // Can't be negative.
+          favoritesOnly: true,
         ),
         throwsA(
           isA<ArgumentError>().having(
@@ -173,9 +148,10 @@ void main() {
       );
       // pageLength related
       expect(
-        () async => pokemonRepository.getFavoritePokemons(
+        () async => pokemonRepository.getPokemons(
           // Required 1 or higher (should request at least one pokemon).
           pageLength: 0,
+          favoritesOnly: true,
         ),
         throwsA(
           isA<ArgumentError>().having(
@@ -185,66 +161,6 @@ void main() {
           ),
         ),
       );
-    });
-
-    test(
-        "It should return the pokemon successfully fetched even if some request failed",
-        () async {
-      // When fetching the pokemon details, if some request failed, that should'nt
-      // affect other requests.
-
-      httpClient.throwException.addAll([3, 5, 9, 15]);
-      const requestedPokemonCount = 20;
-      final successfullRequestsCount =
-          requestedPokemonCount - httpClient.throwException.length;
-
-      final pokemons = await pokemonRepository.getFavoritePokemons(
-        pageLength: requestedPokemonCount,
-      );
-
-      expect(
-        pokemons.length,
-        equals(successfullRequestsCount),
-      );
-    });
-
-    test("It should throw An HttpException if all the request failed",
-        () async {
-      httpClient.throwException.addAll([1, 2, 3, 4, 5]);
-
-      expect(
-        () async => pokemonRepository.getFavoritePokemons(
-          pageLength: httpClient.throwException.length,
-        ),
-        throwsA(isA<HttpException>()),
-      );
-    });
-
-    test(
-        "It should send GET requests to the right URLs with the correct number of retries",
-        () async {
-      const pageLength = 10;
-      const pageNumber = 3;
-
-      await pokemonRepository.getFavoritePokemons(
-        pageLength: pageLength,
-        pageNumber: pageNumber,
-      );
-
-      final getInvocations = [];
-      const offset = pageNumber * pageLength;
-
-      for (int i = 2; i <= pageLength; i++) {
-        getInvocations.add(
-          httpClient.get("$pokemonEndpoint/${offset + i}", retryCount: 1),
-        );
-      }
-
-      // For some reason verify(getInvocations) is not working.
-      verify([
-        httpClient.get("$pokemonEndpoint/${offset + 1}", retryCount: 1),
-        ...getInvocations
-      ]);
     });
   });
 }

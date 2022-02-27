@@ -21,7 +21,7 @@ class FakeFavoritePokemonsCacheStore implements FavoritePokemonsCacheStore {
   }
 
   @override
-  Future<int> get favoritePokemonsCount => throw UnimplementedError();
+  Future<int> get favoritePokemonsCount async => 55;
 
   @override
   Future<void> removePokemonFromFavorites(int pokemonId) {
