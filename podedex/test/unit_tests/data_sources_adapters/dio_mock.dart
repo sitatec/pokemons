@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:mockito/mockito.dart';
-import 'package:podedex/domain/data_sources/http_client.dart';
 
 import '../domain/data_sources/fakes/fake_data.dart';
 

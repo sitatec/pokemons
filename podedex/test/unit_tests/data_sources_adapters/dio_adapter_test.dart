@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:podedex/data_sources_adapters/dio_adapter.dart';
 import 'package:podedex/domain/data_sources/http_client.dart';
 
-import 'mocks.dart';
+import 'dio_mock.dart';
 
 void main() {
   const fakeUrl = "url";
