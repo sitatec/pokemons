@@ -17,7 +17,7 @@ class DioAdapter implements HttpClient {
       return httpResponse.data;
     } on DioError catch (error) {
       throw HttpException(
-        statusCode: error.response!.statusCode ?? -1,
+        statusCode: error.response?.statusCode ?? -1,
         message: error.message,
       );
     }

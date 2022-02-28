@@ -22,6 +22,7 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
     _database = openDatabase(
       join(await getDatabasesPath(), 'favorite_pokemons.db'),
       onCreate: _createFavoritePokemonsTable,
+      version: 1,
     );
   }
 

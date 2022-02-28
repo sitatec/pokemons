@@ -29,6 +29,6 @@ Pokemon pokemonfromJson(JsonObject jsonObject) {
   );
 }
 
-String _getFormattedTypeName(JsonObject type) {
+String _getFormattedTypeName(dynamic type) {
   return (type["type"]["name"] as String).toCapitalized();
 }

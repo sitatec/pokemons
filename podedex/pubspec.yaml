@@ -18,6 +18,8 @@ dependencies:
   dio_smart_retry: ^1.2.0
   sqflite: ^2.0.2
   path: ^1.8.0
+  palette_generator: ^0.3.3
+  infinite_scroll_pagination: ^3.1.0
 #  cupertino_icons: ^1.0.2
 
 dev_dependencies:
@@ -30,6 +32,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+      - assets/images/adaptative_app_icon.png
 
 
 #--------------- SPLASH SCREEN ----------------#

@@ -24,9 +24,9 @@ class PokeapiAdapter implements PokemonsRemoteDataSource {
   }) async {
     final url = _buildPokemonsRequestUrl(pageNumber, pageLength);
     final httpResponseData = await _httpClient.get(url, retryCount: 2);
-    final Iterable<JsonObject> pokemonsPartialData =
-        httpResponseData["results"];
-    final pokemonsUrls = pokemonsPartialData.map((currentPockemonPartialData) {
+    final pokemonsPartialData = httpResponseData["results"];
+    final pokemonsUrls =
+        pokemonsPartialData.map<String>((currentPockemonPartialData) {
       return currentPockemonPartialData["url"] as String;
     });
     return fetchPokemonsUrls(pokemonsUrls.toList(growable: false));
