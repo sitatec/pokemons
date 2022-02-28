@@ -5,7 +5,7 @@ import 'package:podedex/domain/entities/pokemon.dart';
 
 import 'fake_data.dart';
 
-class FakePokemonsRemoteDataSource extends PokemonsRemoteDataSource {
+class FakePokemonsRemoteDataSource implements PokemonsRemoteDataSource {
   @override
   Future<int> get allPokemonsCount async => 1126;
 
@@ -46,5 +46,10 @@ class FakePokemonsRemoteDataSource extends PokemonsRemoteDataSource {
       pokemons.add(pokemonfromJson(currentPokemonJson));
     }
     return pokemons;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
   }
 }

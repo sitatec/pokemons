@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:podedex/domain/entities/pokemon.dart';
-import 'package:podedex/pages/pokemons_list/bloc/pokemons_list_bloc.dart';
-import 'package:podedex/pages/pokemons_list/bloc/pokemons_list_state.dart';
-import 'package:podedex/pages/pokemons_list/widgets/cards.dart';
+import '../../../domain/entities/pokemon.dart';
+import '../bloc/pokemons_list_bloc.dart';
+import '../bloc/pokemons_list_state.dart';
+import 'cards.dart';
 
 class PokemonsList extends StatefulWidget {
   final PokemonsListBloc _pokemonsListBloc;
@@ -28,7 +28,7 @@ class _PokemonsListState extends State<PokemonsList> {
   }
 
   void updateState(PokemonsListState pokemonsListState) {
-    if (pokemonsListState.lastLoadedPageNumber != -1) {
+    if (pokemonsListState.currentPageNumber != -1) {
       _pagingController.value = pokemonsListState.toPagingState();
     }
   }
@@ -62,7 +62,7 @@ class _PokemonsListState extends State<PokemonsList> {
 
 extension on PokemonsListState {
   PagingState<int, Pokemon> toPagingState() => PagingState(
-        nextPageKey: lastLoadedPageNumber + 1,
+        nextPageKey: currentPageNumber + 1,
         itemList: pokemonsList,
         error: error,
       );

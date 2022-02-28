@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:podedex/constants/colors.dart';
-import 'package:podedex/pages/pokemons_list/pokemons_list_page.dart';
+import 'constants/colors.dart';
+import 'pages/pokemons_list/pokemons_list_page.dart';
 
 void main() {
   runApp(const App());

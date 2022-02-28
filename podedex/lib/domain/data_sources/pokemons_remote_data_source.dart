@@ -1,6 +1,11 @@
+import '../../data_sources_adapters/pokeapi_adapter.dart';
+import 'http_client.dart';
+
 import '../entities/pokemon.dart';
 
 abstract class PokemonsRemoteDataSource {
+  factory PokemonsRemoteDataSource() => PokeapiAdapter(HttpClient.instance);
+
   Future<int> get allPokemonsCount;
 
   /// Fetches [pageLength] pokemons from the API at the page [pageNumber].

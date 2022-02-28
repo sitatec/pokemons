@@ -1,6 +1,6 @@
 import '../../entities/pokemon.dart';
 import '../http_client.dart';
-import './string_utils.dart';
+import 'string_utils.dart';
 
 Pokemon pokemonfromJson(JsonObject jsonObject) {
   // TODO add comments.

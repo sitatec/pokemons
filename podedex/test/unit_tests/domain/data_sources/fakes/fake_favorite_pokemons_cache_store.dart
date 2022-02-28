@@ -27,4 +27,9 @@ class FakeFavoritePokemonsCacheStore implements FavoritePokemonsCacheStore {
   Future<void> removePokemonFromFavorites(int pokemonId) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> dispose() async {
+    // TODO: implement dispose
+  }
 }

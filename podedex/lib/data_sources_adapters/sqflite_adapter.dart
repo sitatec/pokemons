@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:podedex/domain/data_sources/favorite_pokemons_cache_store.dart';
+import '../domain/data_sources/favorite_pokemons_cache_store.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SqfliteAdapter implements FavoritePokemonsCacheStore {
@@ -10,7 +10,7 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
   @visibleForTesting
   static const tableName = "favorite_pokemons";
 
-  SqfliteAdapter(Database? database) {
+  SqfliteAdapter([Database? database]) {
     if (database != null) {
       _database = database;
     } else {
@@ -82,6 +82,14 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
     return _handleDatabaseError<void>(() async {
       final database = await _database;
       await database.delete(tableName, where: "id = ?", whereArgs: [pokemonId]);
+    });
+  }
+
+  @override
+  Future<void> dispose() {
+    return _handleDatabaseError<void>(() async {
+      final database = await _database;
+      return database.close();
     });
   }
 

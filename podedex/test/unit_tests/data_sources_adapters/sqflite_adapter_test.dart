@@ -208,4 +208,33 @@ void main() {
       ),
     );
   });
+
+  // ----------------- dispose ---------------- //
+
+  test("It shoud dispose all the ressources used by SqfliteAdapter", () async {
+    when(
+      mockDatabase.close(),
+    ).thenAnswer((_) async {});
+
+    await sqfliteAdapter.dispose();
+
+    verify(await mockDatabase.close());
+  });
+
+  test(
+      "It should throw FavoritePokemonsCacheException when trying to dispose ressources",
+      () async {
+    when(mockDatabase.close()).thenThrow(mockDatabaseException);
+
+    expect(
+      () async => await sqfliteAdapter.dispose(),
+      throwsA(
+        isA<FavoritePokemonsCacheException>().having(
+          (error) => error.message,
+          "error message",
+          equals(mockDatabaseException.toString()),
+        ),
+      ),
+    );
+  });
 }

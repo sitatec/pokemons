@@ -1,5 +1,5 @@
-import 'package:podedex/domain/data_sources/http_client.dart';
-import 'package:podedex/domain/data_sources/pokemons_remote_data_source.dart';
+import '../domain/data_sources/http_client.dart';
+import '../domain/data_sources/pokemons_remote_data_source.dart';
 
 import '../domain/data_sources/constant.dart';
 import '../domain/data_sources/utils/data_converters.dart';

@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 
+/// A widget that set its background color to the dominant color of the given
+/// [Image].
 class ImageDominantColor extends StatefulWidget {
   // TOOD find better widget name.
+
+  /// The image on which to pick the dominant color.
   final Image image;
   final EdgeInsets imagePadding;
+
+  /// The alpha to apply to the [image]'s dominant color before set it as the
+  /// background. Default to `100`.
   final int colorAlpha;
+
+  /// Construct a [ImageDominantColor].
   const ImageDominantColor(
     this.image, {
     this.imagePadding = EdgeInsets.zero,
@@ -42,7 +51,9 @@ class _ImageDominantColorState extends State<ImageDominantColor> {
 
 // ------------------- Brand --------------------//
 
+/// The brand of the App i.e: Logo and Name.
 class Brand extends StatelessWidget {
+  /// Construct the App [Brand].
   const Brand({Key? key}) : super(key: key);
 
   @override
@@ -67,9 +78,11 @@ class Brand extends StatelessWidget {
 
 // ------------------- RoundedTabIndicator --------------------//
 
+/// A Tab Indicator with the top corners rounded.
 class RoundedTabIndicator extends Decoration {
   final BoxPainter _painter;
 
+  /// Construct a [RoundedTabIndicator].
   RoundedTabIndicator({
     required Color color,
     required double radius,
