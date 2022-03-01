@@ -5,7 +5,10 @@ const JsonObject fakePokemonJson = {
   "name": "bulbasaur",
   "sprites": {
     "other": {
-      "official-artwork": {"front_default": "fake_url"}
+      "official-artwork": {
+        "front_default":
+            "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+      }
     }
   },
   "height": 7,

@@ -1,6 +1,6 @@
 import '../../entities/pokemon.dart';
 import '../http_client.dart';
-import './string_utils.dart';
+import 'string_utils.dart';
 
 Pokemon pokemonfromJson(JsonObject jsonObject) {
   // TODO add comments.
@@ -29,6 +29,6 @@ Pokemon pokemonfromJson(JsonObject jsonObject) {
   );
 }
 
-String _getFormattedTypeName(JsonObject type) {
+String _getFormattedTypeName(dynamic type) {
   return (type["type"]["name"] as String).toCapitalized();
 }

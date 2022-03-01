@@ -26,6 +26,10 @@ class Pokemon {
   late final double avgPower =
       (hp + attack + defense + specialAttack + specialDefense + speed) / 6;
 
+  /// Returns the [types] of this pokemon as a single string e.g:
+  /// [Grass, Poison]  => "Grass, Poison"
+  late final typesAsString = types.join(", ");
+
   /// Construct a [Pokemon]
   Pokemon({
     required this.id,
