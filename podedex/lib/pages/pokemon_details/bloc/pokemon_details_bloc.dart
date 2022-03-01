@@ -28,12 +28,12 @@ class PokemonDetailsBloc {
     _stateStreamController.add(_currentState);
   }
 
-  void toggleFavoriteSate() {
+  Future<void> toggleFavoriteSate() async {
     try {
       if (_currentState.isFavorite) {
-        _favoritePokemonsCacheStore.removePokemonFromFavorites(pokemonId);
+        await _favoritePokemonsCacheStore.removePokemonFromFavorites(pokemonId);
       } else {
-        _favoritePokemonsCacheStore.addPokemonToFavorites(pokemonId);
+        await _favoritePokemonsCacheStore.addPokemonToFavorites(pokemonId);
       }
     } catch (_) {
       _currentState = _currentState.copyWith(

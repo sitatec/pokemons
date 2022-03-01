@@ -15,6 +15,7 @@ class SqfliteAdapter extends ChangeNotifier
   SqfliteAdapter([Database? database]) {
     if (database != null) {
       _database = database;
+      _databaseInitialized.complete(true);
     } else {
       _initializeDatabase();
     }
