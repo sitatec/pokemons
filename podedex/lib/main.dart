@@ -4,6 +4,8 @@ import 'constants/colors.dart';
 import 'pages/pokemons_list/pokemons_list_page.dart';
 
 void main() {
+  // TODO check network and internet availability on request failure.
+  // TODO implement memory efficient version of the [infinite_scroll_pagination] package's implementation.
   runApp(const App());
 }
 

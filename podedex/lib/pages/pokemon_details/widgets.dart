@@ -142,7 +142,7 @@ class PokemonCharacteristic extends StatelessWidget {
 }
 
 class RoundedTrackShape extends RoundedRectSliderTrackShape {
-  // Customized version of the code from [RoundedRectSliderTrackShape.paint] in `lutter/lib/src/material/slider_theme.dart
+  // Customized version of the code from [RoundedRectSliderTrackShape.paint] in `flutter/lib/src/material/slider_theme.dart
   // to make the active slider track rounded in both sides.
   @override
   void paint(
