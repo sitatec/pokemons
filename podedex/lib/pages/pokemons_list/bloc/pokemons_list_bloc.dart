@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import '../../../domain/data_sources/favorite_pokemons_cache_store.dart';
+
 import '../../../domain/data_sources/pokemon_repository.dart';
 import 'pokemons_list_state.dart';
 
@@ -8,29 +11,34 @@ class PokemonsListBloc {
   final PokemonRepository _pokemonsRepository;
   final _nextPageRequests = StreamController<int>();
   late final StreamController<PokemonsListState> _pokemonsListStates;
-  var _currentState = PokemonsListState.initial();
+  var currentState = PokemonsListState.initial();
   int _pokemonsCount = -1;
   StreamSubscription? _nextPageRequestsSubscription;
+  final _onDisposeListeners = <VoidCallback>[];
 
   /// Whether this `BLOC` allow interaction with **only** the favorite pokemons
   /// or not.
-  final bool favoritePokemonsOnly;
+  late final bool favoritePokemonsOnly;
 
   /// Create a [PokemonsListBloc].
-  PokemonsListBloc(
-    this._pokemonsRepository, {
-    this.favoritePokemonsOnly = false,
-  }) {
+  PokemonsListBloc(this._pokemonsRepository,
+      [FavoritePokemonsCacheStore? favoritePokemonsStore]) {
+    favoritePokemonsOnly = favoritePokemonsStore != null;
     _getPokemonsCount();
+    favoritePokemonsStore?.addListener(() {
+      _getPokemonsCount(true);
+      currentState = PokemonsListState.initial();
+      _fetchNextPage(0);
+    });
     _nextPageRequestsSubscription =
         _nextPageRequests.stream.listen(_fetchNextPage);
     _pokemonsListStates = StreamController<PokemonsListState>.broadcast(
-      onListen: () => _pokemonsListStates.add(_currentState),
+      onListen: () => _pokemonsListStates.add(currentState),
     );
   }
 
-  FutureOr<int> _getPokemonsCount() async {
-    if (_pokemonsCount == -1) {
+  FutureOr<int> _getPokemonsCount([bool refresh = false]) async {
+    if (_pokemonsCount == -1 || refresh) {
       _pokemonsCount = await _pokemonsRepository.getPokemonsCount(
         favoritesOnly: favoritePokemonsOnly,
       );
@@ -55,27 +63,33 @@ class PokemonsListBloc {
         pageNumber: pageNumber,
         favoritesOnly: favoritePokemonsOnly,
       );
-      _currentState = _currentState.copyWith(
-        pokemonsList: _currentState.pokemonsList + newPokemons,
+      currentState = currentState.copyWith(
+        pokemonsList: currentState.pokemonsList + newPokemons,
         currentPageNumber: pageNumber,
         lastPageLoaded:
-            _currentState.pokemonsList.length == _getPokemonsCount(),
+            currentState.pokemonsList.length >= await _getPokemonsCount(),
       );
     } catch (error) {
-      _currentState = _currentState.copyWith(
+      currentState = currentState.copyWith(
           error: PokemonsListBlocExcpetion(
         "An Error occurred while loadind data, please retry.",
       ));
     } finally {
-      _pokemonsListStates.add(_currentState);
+      _pokemonsListStates.add(currentState);
     }
   }
 
   /// Free any ressource held by this BLOC e.g: Streams
   void dispose() {
     _nextPageRequestsSubscription?.cancel();
-    _currentState.dispose();
+    currentState.dispose();
+    for (var disposeListener in _onDisposeListeners) {
+      disposeListener();
+    }
   }
+
+  void addOndisposeListener(VoidCallback listener) =>
+      _onDisposeListeners.add(listener);
 }
 
 /// Thrown when a error occured while loading data

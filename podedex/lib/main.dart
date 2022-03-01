@@ -28,7 +28,7 @@ class App extends StatelessWidget {
           foregroundColor: darkBlue,
         ),
       ),
-      home: PokemonsListPage(),
+      home: const PokemonsListPage(),
     );
   }
 }

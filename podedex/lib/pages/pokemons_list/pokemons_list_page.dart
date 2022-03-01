@@ -8,22 +8,41 @@ import 'widgets/pokemons_list.dart';
 import '../../domain/data_sources/pokemon_repository.dart';
 import 'widgets/simple_widgets.dart';
 
-class PokemonsListPage extends StatelessWidget {
-  PokemonsListPage({Key? key}) : super(key: key);
-  final _pokemonsListBloc = PokemonsListBloc(PokemonRepository(
+class PokemonsListPage extends StatefulWidget {
+  const PokemonsListPage({Key? key}) : super(key: key);
+
+  @override
+  State<PokemonsListPage> createState() => _PokemonsListPageState();
+}
+
+class _PokemonsListPageState extends State<PokemonsListPage> {
+  final pokemonRepository = PokemonRepository(
     PokemonsRemoteDataSource(),
     FavoritePokemonsCacheStore.instance,
-  ));
+  );
+
+  late final _pokemonsListBloc = PokemonsListBloc(pokemonRepository);
+
+  late final _favoritePokemonsListBloc = PokemonsListBloc(
+    pokemonRepository,
+    FavoritePokemonsCacheStore.instance,
+  );
+
+  @override
+  void dispose() {
+    _pokemonsListBloc.dispose();
+    _favoritePokemonsListBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = Theme.of(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(appTheme.appBarTheme.toolbarHeight!),
-          child: const _AppBar(),
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: _AppBar(),
         ),
         body: Column(
           children: [
@@ -32,7 +51,7 @@ class PokemonsListPage extends StatelessWidget {
               child: TabBarView(
                 children: [
                   PokemonsList(_pokemonsListBloc),
-                  const Icon(Icons.directions_car)
+                  PokemonsList(_favoritePokemonsListBloc),
                 ],
               ),
             ),
@@ -54,8 +73,9 @@ class _AppBar extends StatelessWidget {
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle(
         statusBarColor: appTheme.appBarTheme.backgroundColor,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: appTheme.scaffoldBackgroundColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
       title: const Brand(),
       centerTitle: true,
@@ -95,10 +115,39 @@ class _TabBar extends StatelessWidget {
   }
 }
 
-class _FavoriteTab extends StatelessWidget {
+class _FavoriteTab extends StatefulWidget {
   const _FavoriteTab({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<_FavoriteTab> createState() => _FavoriteTabState();
+}
+
+class _FavoriteTabState extends State<_FavoriteTab> {
+  int favoritePokemonsCount = 0;
+  final favoritePokemonsStore = FavoritePokemonsCacheStore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchfavoritePokemonsCount();
+    favoritePokemonsStore.addListener(_fetchfavoritePokemonsCount);
+  }
+
+  void _fetchfavoritePokemonsCount() {
+    favoritePokemonsStore.favoritePokemonsCount.then((value) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        setState(() => favoritePokemonsCount = value);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    favoritePokemonsStore.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +162,14 @@ class _FavoriteTab extends StatelessWidget {
             const SizedBox(width: 4),
             CircleAvatar(
               backgroundColor: appTheme.primaryColor,
-              child: const Padding(
-                padding: EdgeInsets.only(bottom: 1),
-                child: Text("1", style: TextStyle(fontSize: 12)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 1),
+                child: Text(
+                  favoritePokemonsCount.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
-              minRadius: 9,
+              minRadius: 10,
             )
           ],
         ),

@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 import '../../data_sources_adapters/sqflite_adapter.dart';
 
 /// The class that manages the favorite pokemons
-abstract class FavoritePokemonsCacheStore {
+abstract class FavoritePokemonsCacheStore extends ChangeNotifier {
   /// The number of favorite pokemons currently in cache.
   Future<int> get favoritePokemonsCount;
 
@@ -32,7 +34,10 @@ abstract class FavoritePokemonsCacheStore {
   /// Remove the pokemon identified by [pokemonId] from the favorites.
   Future<void> removePokemonFromFavorites(int pokemonId);
 
+  Future<bool> isFavoritePokemon(int pokemonId);
+
   /// Free all the ressouces used by this instance.
+  @override
   Future<void> dispose();
 }
 

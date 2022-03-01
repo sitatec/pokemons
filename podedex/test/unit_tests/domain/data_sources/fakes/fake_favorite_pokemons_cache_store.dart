@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:podedex/domain/data_sources/favorite_pokemons_cache_store.dart';
 
-class FakeFavoritePokemonsCacheStore implements FavoritePokemonsCacheStore {
+class FakeFavoritePokemonsCacheStore extends ChangeNotifier
+    implements FavoritePokemonsCacheStore {
   @override
   Future<List<int>> getFavoritePokemonIds({
     int pageNumber = 0,
@@ -31,5 +33,10 @@ class FakeFavoritePokemonsCacheStore implements FavoritePokemonsCacheStore {
   @override
   Future<void> dispose() async {
     // TODO: implement dispose
+  }
+
+  @override
+  Future<bool> isFavoritePokemon(int pokemonId) {
+    throw UnimplementedError();
   }
 }
