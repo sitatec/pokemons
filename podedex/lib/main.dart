@@ -28,7 +28,23 @@ class App extends StatelessWidget {
           foregroundColor: darkBlue,
         ),
       ),
-      home: const PokemonsListPage(),
+      home: Builder(builder: (context) {
+        final appMediaQuery = MediaQuery.of(context);
+        final textScaleFactor = _getTextScaleFactor(appMediaQuery.size.width);
+        return MediaQuery(
+            data: appMediaQuery.copyWith(textScaleFactor: textScaleFactor),
+            child: const PokemonsListPage());
+      }),
     );
+  }
+
+  double _getTextScaleFactor(double screenWidth) {
+    if (screenWidth > 1200) {
+      return 1.5;
+    }
+    if (screenWidth > 768) {
+      return 1.22;
+    }
+    return 1.1;
   }
 }

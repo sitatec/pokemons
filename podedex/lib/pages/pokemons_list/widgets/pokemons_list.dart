@@ -48,7 +48,6 @@ class _PokemonsListState extends State<PokemonsList> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return RefreshIndicator(
       onRefresh: () async => _pagingController.refresh(),
       child: PagedGridView(
@@ -83,11 +82,15 @@ class _PokemonsListState extends State<PokemonsList> {
   }
 
   void _navigateToPokemonDetails(Pokemon pokemon) {
+    final mediaQuery = MediaQuery.of(context);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) {
-        return PokemonDetailsPage(
-          pokemon,
-          PokemonDetailsBloc(FavoritePokemonsCacheStore.instance, pokemon.id),
+        return MediaQuery(
+          data: mediaQuery,
+          child: PokemonDetailsPage(
+            pokemon,
+            PokemonDetailsBloc(FavoritePokemonsCacheStore.instance, pokemon.id),
+          ),
         );
       }),
     );
