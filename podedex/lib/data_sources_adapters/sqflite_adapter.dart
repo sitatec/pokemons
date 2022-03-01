@@ -2,27 +2,32 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
-import 'package:podedex/domain/data_sources/favorite_pokemons_cache_store.dart';
+import '../domain/data_sources/favorite_pokemons_cache_store.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SqfliteAdapter implements FavoritePokemonsCacheStore {
-  late final FutureOr<Database> _database;
+class SqfliteAdapter extends ChangeNotifier
+    implements FavoritePokemonsCacheStore {
+  late final Database _database;
   @visibleForTesting
   static const tableName = "favorite_pokemons";
+  final _databaseInitialized = Completer<bool>();
 
-  SqfliteAdapter(Database? database) {
+  SqfliteAdapter([Database? database]) {
     if (database != null) {
       _database = database;
+      _databaseInitialized.complete(true);
     } else {
       _initializeDatabase();
     }
   }
 
   Future<void> _initializeDatabase() async {
-    _database = openDatabase(
+    _database = await openDatabase(
       join(await getDatabasesPath(), 'favorite_pokemons.db'),
       onCreate: _createFavoritePokemonsTable,
+      version: 1,
     );
+    _databaseInitialized.complete(true);
   }
 
   FutureOr<void> _createFavoritePokemonsTable(
@@ -39,9 +44,9 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
   @override
   Future<int> get favoritePokemonsCount async {
     return _handleDatabaseError<int>(() async {
-      final database = await _database;
+      await _databaseInitialized.future;
       final databaseResponse =
-          await database.rawQuery("SELECT COUNT(*) FROM $tableName");
+          await _database.rawQuery("SELECT COUNT(*) FROM $tableName");
       return Sqflite.firstIntValue(databaseResponse)!;
     });
   }
@@ -49,12 +54,25 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
   @override
   Future<void> addPokemonToFavorites(int pokemonId) async {
     return _handleDatabaseError<void>(() async {
-      final database = await _database;
-      await database.insert(
+      await _databaseInitialized.future;
+      await _database.insert(
         tableName,
         {"id": pokemonId},
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
+      notifyListeners();
+    });
+  }
+
+  @override
+  Future<bool> isFavoritePokemon(int pokemonId) {
+    return _handleDatabaseError<bool>(() async {
+      await _databaseInitialized.future;
+      final databaseResponse = await _database.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM $tableName WHERE id = ?)",
+        [pokemonId],
+      );
+      return Sqflite.firstIntValue(databaseResponse) == 1;
     });
   }
 
@@ -64,8 +82,8 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
     int pageLength = 30,
   }) async {
     return _handleDatabaseError<List<int>>(() async {
-      final database = await _database;
-      final favoritePokemonsIds = await database.query(
+      await _databaseInitialized.future;
+      final favoritePokemonsIds = await _database.query(
         tableName,
         limit: pageLength,
         offset: pageLength * pageNumber,
@@ -79,9 +97,20 @@ class SqfliteAdapter implements FavoritePokemonsCacheStore {
   @override
   Future<void> removePokemonFromFavorites(int pokemonId) async {
     return _handleDatabaseError<void>(() async {
-      final database = await _database;
-      await database.delete(tableName, where: "id = ?", whereArgs: [pokemonId]);
+      await _databaseInitialized.future;
+      await _database
+          .delete(tableName, where: "id = ?", whereArgs: [pokemonId]);
+      notifyListeners();
     });
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _handleDatabaseError<void>(() async {
+      await _databaseInitialized.future;
+      return _database.close();
+    });
+    super.dispose();
   }
 
   Future<T> _handleDatabaseError<T>(Future<T> Function() function) async {

@@ -64,4 +64,9 @@ void main() {
       ),
     );
   });
+
+  test("It should release ressources", () {
+    dioAdapter.dispose();
+    verify(mockDio.close());
+  });
 }

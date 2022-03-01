@@ -18,7 +18,9 @@ dependencies:
   dio_smart_retry: ^1.2.0
   sqflite: ^2.0.2
   path: ^1.8.0
-#  cupertino_icons: ^1.0.2
+  palette_generator: ^0.3.3
+  infinite_scroll_pagination: ^3.1.0
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -26,10 +28,14 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   mockito: ^5.1.0
   build_runner: ^2.1.7
+  network_image_mock: ^2.0.1
 
 
 flutter:
   uses-material-design: true
+  assets:
+      - assets/images/adaptative_app_icon.png
+      - assets/images/pokemon_icon.svg
 
 
 #--------------- SPLASH SCREEN ----------------#
