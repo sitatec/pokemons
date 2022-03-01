@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../domain/data_sources/favorite_pokemons_cache_store.dart';
 import '../../domain/data_sources/pokemons_remote_data_source.dart';
+import '../../domain/entities/pokemon.dart';
 import 'bloc/pokemons_list_bloc.dart';
 import 'widgets/pokemons_list.dart';
 import '../../domain/data_sources/pokemon_repository.dart';
@@ -28,10 +30,20 @@ class _PokemonsListPageState extends State<PokemonsListPage> {
     FavoritePokemonsCacheStore.instance,
   );
 
+  final _pokemonsListPagingController = PagingController<int, Pokemon>(
+    firstPageKey: 0,
+  );
+
+  final _favoritePokemonsPagingController = PagingController<int, Pokemon>(
+    firstPageKey: 0,
+  );
+
   @override
   void dispose() {
     _pokemonsListBloc.dispose();
     _favoritePokemonsListBloc.dispose();
+    _pokemonsListPagingController.dispose();
+    _favoritePokemonsPagingController.dispose();
     super.dispose();
   }
 
@@ -50,8 +62,14 @@ class _PokemonsListPageState extends State<PokemonsListPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  PokemonsList(_pokemonsListBloc),
-                  PokemonsList(_favoritePokemonsListBloc),
+                  PokemonsList(
+                    _pokemonsListBloc,
+                    _pokemonsListPagingController,
+                  ),
+                  PokemonsList(
+                    _favoritePokemonsListBloc,
+                    _favoritePokemonsPagingController,
+                  ),
                 ],
               ),
             ),

@@ -12,12 +12,10 @@ import 'cards.dart';
 
 class PokemonsList extends StatefulWidget {
   final PokemonsListBloc _pokemonsListBloc;
-  final _pagingController = PagingController<int, Pokemon>(
-    firstPageKey: 0,
-  );
-  PokemonsList(this._pokemonsListBloc, {Key? key}) : super(key: key) {
-    _pokemonsListBloc.addOndisposeListener(_pagingController.dispose);
-  }
+  final PagingController<int, Pokemon> _pagingController;
+
+  const PokemonsList(this._pokemonsListBloc, this._pagingController, {Key? key})
+      : super(key: key);
 
   @override
   _PokemonsListState createState() => _PokemonsListState();
@@ -51,21 +49,24 @@ class _PokemonsListState extends State<PokemonsList> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return PagedGridView(
-      showNewPageErrorIndicatorAsGridChild: false,
-      showNewPageProgressIndicatorAsGridChild: false,
-      showNoMoreItemsIndicatorAsGridChild: false,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<Pokemon>(
-        itemBuilder: (context, pokemon, index) => InkWell(
-          child: PokemonCard(pokemon),
-          onTap: () => _navigateToPokemonDetails(pokemon),
+    return RefreshIndicator(
+      onRefresh: () async => _pagingController.refresh(),
+      child: PagedGridView(
+        showNewPageErrorIndicatorAsGridChild: false,
+        showNewPageProgressIndicatorAsGridChild: false,
+        showNoMoreItemsIndicatorAsGridChild: false,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<Pokemon>(
+          itemBuilder: (context, pokemon, index) => InkWell(
+            child: PokemonCard(pokemon),
+            onTap: () => _navigateToPokemonDetails(pokemon),
+          ),
         ),
-      ),
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: _getMaxCellWidth(),
-        childAspectRatio: 110 / 186,
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: _getMaxCellWidth(),
+          childAspectRatio: 110 / 186,
+        ),
       ),
     );
   }
