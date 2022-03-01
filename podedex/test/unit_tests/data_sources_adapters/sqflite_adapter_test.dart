@@ -209,6 +209,62 @@ void main() {
     );
   });
 
+  // ----------------- isFavoritePokemon ---------------- //
+
+  test("It shoud return true (the pokemon is a favorite one)", () async {
+    when(
+      mockDatabase.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM ${SqfliteAdapter.tableName} WHERE id = ?)",
+        [pokemonId],
+      ),
+    ).thenAnswer((_) async => [
+          {"": 1} // 1 ==> true
+        ]);
+
+    expect(
+      await sqfliteAdapter.isFavoritePokemon(pokemonId),
+      equals(true),
+    );
+  });
+
+  test("It shoud return false (the pokemon is not a favorite one)", () async {
+    when(
+      mockDatabase.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM ${SqfliteAdapter.tableName} WHERE id = ?)",
+        [pokemonId],
+      ),
+    ).thenAnswer((_) async => [
+          {"": 0} // 0 ==> true
+        ]);
+
+    expect(
+      await sqfliteAdapter.isFavoritePokemon(pokemonId),
+      equals(false),
+    );
+  });
+
+  test(
+      "It should throw FavoritePokemonsCacheException when checkin if the pokemon is favorite",
+      () async {
+    when(
+      mockDatabase.rawQuery(
+        "SELECT EXISTS(SELECT 1 FROM ${SqfliteAdapter.tableName} WHERE id = ?)",
+        [pokemonId],
+      ),
+    ).thenThrow(mockDatabaseException);
+
+    expect(
+      () async => await sqfliteAdapter.isFavoritePokemon(pokemonId),
+      throwsA(
+        isA<FavoritePokemonsCacheException>().having(
+          (error) => error.message,
+          "error message",
+          equals(mockDatabaseException.toString()),
+        ),
+      ),
+    );
+  });
+
   // ----------------- dispose ---------------- //
 
   test("It shoud dispose all the ressources used by SqfliteAdapter", () async {

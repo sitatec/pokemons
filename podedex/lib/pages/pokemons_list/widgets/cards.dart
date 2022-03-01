@@ -15,6 +15,8 @@ class PokemonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final textScaleFactor = _getTextScaleFactor(screenWidth);
     return CustomCard(
       bodyPadding: const EdgeInsets.all(10),
       header: ImageDominantColor(
@@ -23,11 +25,21 @@ class PokemonCard extends StatelessWidget {
       ),
       title: Padding(
         padding: const EdgeInsets.only(top: 6),
-        child: Text(_pokemon.name),
+        child: Text(_pokemon.name, textScaleFactor: textScaleFactor),
       ),
-      subtitle: Text(_pokemon.formatedId),
-      footer: Text(_pokemon.typesAsString),
+      subtitle: Text(_pokemon.formatedId, textScaleFactor: textScaleFactor),
+      footer: Text(_pokemon.typesAsString, textScaleFactor: textScaleFactor),
     );
+  }
+
+  double _getTextScaleFactor(double screenWidth) {
+    if (screenWidth > 1200) {
+      return 1.4;
+    }
+    if (screenWidth > 768) {
+      return 1.22;
+    }
+    return 1.1;
   }
 }
 

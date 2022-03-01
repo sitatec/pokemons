@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'pokemons_remote_data_source.dart';
+import '../entities/pokemon.dart';
 import 'constant.dart';
 import 'favorite_pokemons_cache_store.dart';
-import '../entities/pokemon.dart';
+import 'pokemons_remote_data_source.dart';
 
 /// The pokemons data repository
 ///

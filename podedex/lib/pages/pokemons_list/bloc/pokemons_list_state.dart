@@ -36,7 +36,7 @@ class PokemonsListState {
       PokemonsListState(
         lastPageLoaded: lastPageLoaded ?? this.lastPageLoaded,
         pokemonsList: pokemonsList ?? this.pokemonsList,
-        error: error ?? this.error,
+        error: error,
         currentPageNumber: currentPageNumber ?? this.currentPageNumber,
       );
 

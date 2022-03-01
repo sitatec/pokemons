@@ -14,11 +14,14 @@ class ImageDominantColor extends StatefulWidget {
   /// background. Default to `100`.
   final int colorAlpha;
 
+  final void Function(Color)? onDominantColorPicked;
+
   /// Construct a [ImageDominantColor].
   const ImageDominantColor(
     this.image, {
     this.imagePadding = EdgeInsets.zero,
-    this.colorAlpha = 100,
+    this.colorAlpha = 50,
+    this.onDominantColorPicked,
     Key? key,
   }) : super(key: key);
 
@@ -35,11 +38,16 @@ class _ImageDominantColorState extends State<ImageDominantColor> {
       future: PaletteGenerator.fromImageProvider(widget.image.image),
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          imageDominantColor =
-              (snapshot.data?.dominantColor?.color ?? imageDominantColor)
-                  .withAlpha(widget.colorAlpha);
+          final dominantColor = snapshot.data?.dominantColor?.color;
+          if (dominantColor != null) {
+            imageDominantColor = dominantColor.withAlpha(widget.colorAlpha);
+            widget.onDominantColorPicked?.call(imageDominantColor);
+          }
         }
         return Container(
+          width: double.infinity,
+          height: double.infinity,
+          margin: EdgeInsets.zero,
           padding: widget.imagePadding,
           color: imageDominantColor,
           child: widget.image,
