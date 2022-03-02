@@ -50,6 +50,7 @@ class FakeFavoritePokemonsCacheStore extends ChangeNotifier
   @override
   Future<void> dispose() async {
     // TODO: implement dispose
+    super.dispose();
   }
 
   @override

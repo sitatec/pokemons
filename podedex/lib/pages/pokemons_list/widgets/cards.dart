@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import '../../../constants/colors.dart';
 
 import '../../../domain/entities/pokemon.dart';
-import 'simple_widgets.dart';
+import '../../core_widgets.dart';
 
 /// A Pokemon Card
 ///
 /// A Card that show a sommary of a [Pokemon] (image, name, types and id).
 class PokemonCard extends StatelessWidget {
   final Pokemon _pokemon;
+  final double? fixedHeight;
 
   /// Construct a [PokemonCard] for the given [_pokemon].
-  const PokemonCard(this._pokemon, {Key? key}) : super(key: key);
+  const PokemonCard(this._pokemon, {this.fixedHeight, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
+      fixedHeight: fixedHeight,
       bodyPadding: const EdgeInsets.all(10),
       header: ImageDominantColor(
         Image.network(_pokemon.imageUrl),
@@ -54,6 +57,8 @@ class CustomCard extends StatelessWidget {
   /// Default to `EdgeInsets.zero`.
   final EdgeInsets headerPadding;
 
+  final double? fixedHeight;
+
   /// Create a [CustomCard].
   const CustomCard({
     required this.header,
@@ -64,47 +69,51 @@ class CustomCard extends StatelessWidget {
     this.headerPadding = EdgeInsets.zero,
     this.bodyHorizontalAlignment = CrossAxisAlignment.start,
     this.bodyVerticalAlignment = MainAxisAlignment.start,
+    this.fixedHeight,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 58,
-            child: Container(
-              width: double.infinity,
-              padding: headerPadding,
-              child: header,
-            ),
-          ),
-          Expanded(
-            flex: 42,
-            child: Padding(
-              padding: bodyPadding,
-              child: Column(
-                mainAxisAlignment: bodyVerticalAlignment,
-                crossAxisAlignment: bodyHorizontalAlignment,
-                children: [
-                  _DefaultSmallTextStyle(subtitle),
-                  DefaultTextStyle(
-                    child: title,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xDE000000),
-                    ),
-                  ),
-                  const Expanded(child: SizedBox()),
-                  _DefaultSmallTextStyle(footer),
-                ],
+    return SizedBox(
+      height: fixedHeight,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 58,
+              child: Container(
+                width: double.infinity,
+                padding: headerPadding,
+                child: header,
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 42,
+              child: Padding(
+                padding: bodyPadding,
+                child: Column(
+                  mainAxisAlignment: bodyVerticalAlignment,
+                  crossAxisAlignment: bodyHorizontalAlignment,
+                  children: [
+                    _DefaultSmallTextStyle(subtitle),
+                    DefaultTextStyle(
+                      child: title,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xDE000000),
+                      ),
+                    ),
+                    const Expanded(child: SizedBox()),
+                    _DefaultSmallTextStyle(footer),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:podedex/domain/data_sources/favorite_pokemons_cache_store.dart';
 import 'package:podedex/pages/pokemon_details/bloc/pokemon_details_bloc.dart';
 

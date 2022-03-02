@@ -48,7 +48,6 @@ class FakePokemonsRemoteDataSource implements PokemonsRemoteDataSource {
     return pokemons;
   }
 
-  @override
   void dispose() {
     // TODO: implement dispose
   }

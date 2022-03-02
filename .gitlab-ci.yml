@@ -1,8 +1,11 @@
+stages:
+  - "analyze_and_test"
 analyze_and_test:
   stage: analyze_and_test
   image: cirrusci/flutter:stable
   before_script:
     - export PATH="$PATH":"$HOME/.flutter-sdk/.pub-cache/bin"
+    - cd ./podedex
     - flutter pub get
   script:
     - flutter analyze

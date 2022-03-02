@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:podedex/domain/data_sources/utils/data_converters.dart';
 import 'package:podedex/domain/entities/pokemon.dart';
 
 void main() {

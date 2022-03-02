@@ -1,5 +1,4 @@
 import 'pokemon_details_bloc.dart';
-import '../pokemon_details_page.dart';
 
 class PokemonDetailsState {
   final bool isFavorite;

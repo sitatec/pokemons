@@ -55,6 +55,7 @@ class Quantity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Container(
       padding: padding,
       color: backgroundColor,
@@ -72,12 +73,13 @@ class Quantity extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8 * mediaQuery.textScaleFactor),
           SliderTheme(
             data: SliderThemeData(
               thumbShape: SliderComponentShape.noThumb,
               overlayShape: SliderComponentShape.noOverlay,
               trackShape: RoundedTrackShape(),
+              trackHeight: _getTrackHeight(mediaQuery.size.width),
             ),
             child: Slider(
               value: validQuatity,
@@ -91,6 +93,16 @@ class Quantity extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double _getTrackHeight(double screenWidth) {
+    if (screenWidth > 1200) {
+      return 5;
+    }
+    if (screenWidth > 768) {
+      return 4.5;
+    }
+    return 4;
   }
 
   Color _getActiveColor() {
@@ -157,18 +169,11 @@ class RoundedTrackShape extends RoundedRectSliderTrackShape {
     bool isEnabled = false,
     double additionalActiveTrackHeight = 0,
   }) {
-    assert(context != null);
-    assert(offset != null);
-    assert(parentBox != null);
-    assert(sliderTheme != null);
     assert(sliderTheme.disabledActiveTrackColor != null);
     assert(sliderTheme.disabledInactiveTrackColor != null);
     assert(sliderTheme.activeTrackColor != null);
     assert(sliderTheme.inactiveTrackColor != null);
     assert(sliderTheme.thumbShape != null);
-    assert(enableAnimation != null);
-    assert(textDirection != null);
-    assert(thumbCenter != null);
     // If the slider [SliderThemeData.trackHeight] is less than or equal to 0,
     // then it makes no difference whether the track is painted or not,
     // therefore the painting  can be a no-op.

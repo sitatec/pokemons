@@ -5,10 +5,10 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../domain/data_sources/favorite_pokemons_cache_store.dart';
 import '../../domain/data_sources/pokemons_remote_data_source.dart';
 import '../../domain/entities/pokemon.dart';
+import '../core_widgets.dart';
 import 'bloc/pokemons_list_bloc.dart';
 import 'widgets/pokemons_list.dart';
 import '../../domain/data_sources/pokemon_repository.dart';
-import 'widgets/simple_widgets.dart';
 
 class PokemonsListPage extends StatefulWidget {
   const PokemonsListPage({Key? key}) : super(key: key);
@@ -108,10 +108,12 @@ class _TabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTheme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.only(top: 2),
       color: appTheme.appBarTheme.backgroundColor,
       child: TabBar(
+        isScrollable: screenWidth < 300,
         labelColor: appTheme.colorScheme.onSurface,
         unselectedLabelColor: appTheme.colorScheme.onSurfaceVariant,
         labelStyle: const TextStyle(

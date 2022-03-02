@@ -5,7 +5,6 @@ import 'package:podedex/domain/data_sources/utils/string_utils.dart';
 import 'package:podedex/domain/entities/pokemon.dart';
 
 import '../fakes/fake_data.dart';
-import '../fakes/fake_http_client.dart';
 
 void main() {
   test("It should convert the jsonObject to a Pokemon object", () {

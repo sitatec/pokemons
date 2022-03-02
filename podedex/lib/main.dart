@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'constants/colors.dart';
 import 'pages/pokemons_list/pokemons_list_page.dart';
+import 'pages/core_widgets.dart';
 
 void main() {
   // TODO check network and internet availability on request failure.
@@ -11,6 +12,7 @@ void main() {
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final appTheme = Theme.of(context);
@@ -30,23 +32,7 @@ class App extends StatelessWidget {
           foregroundColor: darkBlue,
         ),
       ),
-      home: Builder(builder: (context) {
-        final appMediaQuery = MediaQuery.of(context);
-        final textScaleFactor = _getTextScaleFactor(appMediaQuery.size.width);
-        return MediaQuery(
-            data: appMediaQuery.copyWith(textScaleFactor: textScaleFactor),
-            child: const PokemonsListPage());
-      }),
+      home: const AdaptiveTextSizeScope(child: PokemonsListPage()),
     );
-  }
-
-  double _getTextScaleFactor(double screenWidth) {
-    if (screenWidth > 1200) {
-      return 1.5;
-    }
-    if (screenWidth > 768) {
-      return 1.22;
-    }
-    return 1.1;
   }
 }

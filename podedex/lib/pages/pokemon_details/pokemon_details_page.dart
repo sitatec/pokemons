@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../constants/colors.dart';
+import '../core_widgets.dart';
 import 'bloc/pokemon_details_bloc.dart';
 import 'bloc/pokemon_details_sate.dart';
 import 'widgets.dart';
-import '../pokemons_list/widgets/simple_widgets.dart';
-
 import '../../domain/entities/pokemon.dart';
 
 class PokemonDetailsPage extends StatefulWidget {
@@ -29,11 +28,13 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   bool isFavorite = false;
   StreamSubscription? stateStreamSubscription;
 
+  late final scaleFactor = MediaQuery.of(context).textScaleFactor;
+
   late final isNotFavoriteButtonStyle = TextButton.styleFrom(
     primary: Colors.white,
     backgroundColor: Theme.of(context).primaryColor,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-    padding: const EdgeInsets.all(16),
+    padding: EdgeInsets.all(16 * scaleFactor),
     textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
     elevation: 10,
   );
@@ -41,7 +42,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   late final isFavoriteButtonStyle = TextButton.styleFrom(
     backgroundColor: const Color(0xFFD5DEFF),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-    padding: const EdgeInsets.all(16),
+    padding: EdgeInsets.all(16 * scaleFactor),
     textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
     elevation: 10,
   );
@@ -77,27 +78,19 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appTheme = Theme.of(context);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
-            flexibleSpace: Material(
-              elevation: 1,
-              shadowColor: appTheme.scaffoldBackgroundColor.withAlpha(150),
-              child: Container(color: headerBackgroundColor),
-            ),
-            leading: const BackButton(color: darkBlue),
-            systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Material(
-              child: SizedBox(
-                height: 216 + _PokemonCharacteristics.height,
+            backgroundColor: headerBackgroundColor.withOpacity(1),
+            expandedHeight:
+                216 + _PokemonCharacteristics.height + kToolbarHeight,
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              background: Container(
+                color: Colors.white,
+                height: 216 + _PokemonCharacteristics.height + kToolbarHeight,
                 child: Stack(
                   children: [
                     Positioned(
@@ -115,16 +108,23 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                         alignment: Alignment.bottomRight,
                         cacheHeight: 150,
                         cacheWidth: 150,
+                        width: 150,
+                        height: 150,
                       ),
                       imagePadding:
                           const EdgeInsets.only(right: 5, bottom: 68.5),
                       onDominantColorPicked: _updateHeaderBackgroundColor,
                     ),
                     _PokemonInfo(pokemon: pokemon),
-                    _PokemonCharacteristics(pokemon: pokemon)
+                    _PokemonCharacteristics(pokemon: pokemon),
                   ],
                 ),
               ),
+            ),
+            leading: const BackButton(color: darkBlue),
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
             ),
           ),
           SliverToBoxAdapter(
@@ -177,7 +177,8 @@ class _PokemonInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, bottom: 92, top: 23),
+      padding:
+          const EdgeInsets.only(left: 16, bottom: 92, top: 23 + kToolbarHeight),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

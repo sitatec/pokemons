@@ -1,6 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 
+/// A widget that set the text size of all of its descendants depending on the
+/// screen size (large screen => big text).
+class AdaptiveTextSizeScope extends StatelessWidget {
+  final Widget child;
+  final Map<int, double> configurations;
+  const AdaptiveTextSizeScope({
+    required this.child,
+    this.configurations = const {
+      1200: 1.5,
+      768: 1.22,
+      0: 1.1 // 0 means default.
+    },
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final appMediaQuery = MediaQuery.of(context);
+    final textScaleFactor = getAdaptativeTextScaleFactor(
+      appMediaQuery.size.width,
+      appMediaQuery.textScaleFactor,
+    );
+
+    return MediaQuery(
+      data: appMediaQuery.copyWith(textScaleFactor: textScaleFactor),
+      child: child,
+    );
+  }
+
+  double getAdaptativeTextScaleFactor(
+    double deviceScreenWidth,
+    double defaultValue,
+  ) {
+    final configScreenWidths = configurations.keys.toList()..sort();
+    for (var configScreenWidth in configScreenWidths.reversed) {
+      if (configScreenWidth <= deviceScreenWidth) {
+        return configurations[configScreenWidth]!;
+      }
+    }
+    return defaultValue;
+  }
+}
+
+// ------------------- ImageDominantColor --------------------//
+
 /// A widget that set its background color to the dominant color of the given
 /// [Image].
 class ImageDominantColor extends StatefulWidget {
