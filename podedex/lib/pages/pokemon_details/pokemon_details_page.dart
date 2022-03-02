@@ -154,7 +154,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
           child: TextButton(
             onPressed: bloc.toggleFavoriteSate,
             child: Text(
-                isFavorite ? "Remove from favourites" : "Mark as favorite"),
+                isFavorite ? "Remove from favourites" : "Mark as favourite"),
             style:
                 isFavorite ? isFavoriteButtonStyle : isNotFavoriteButtonStyle,
           ),
@@ -177,8 +177,8 @@ class _PokemonInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 16, bottom: 92, top: 23 + kToolbarHeight),
+      padding: const EdgeInsets.only(
+          left: 16, bottom: 92, top: kToolbarHeight * 1.8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,4 +1,5 @@
 # podedex
+[![CI pipeline](https://gitlab.com/sita.berete.3/bayzat-mo-engineering-assignments-SitaBerete/badges/main/pipeline.svg)](https://gitlab.com/sita.berete.3/bayzat-mo-engineering-assignments-SitaBerete/-/jobs/2151875556)
 
 ## Build
 First if you haven't already done it, please make sure your flutter version is compatible with the latest sdk `>=2.16.1 <3.0.0`, and then run `flutter pub get`.

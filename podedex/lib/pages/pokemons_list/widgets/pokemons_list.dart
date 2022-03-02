@@ -47,12 +47,15 @@ class _PokemonsListState extends State<PokemonsList> {
     super.dispose();
   }
 
-  late final pagedChildBulder = PagedChildBuilderDelegate<Pokemon>(
-    itemBuilder: (context, pokemon, index) => InkWell(
-      child: PokemonCard(pokemon, fixedHeight: 300),
-      onTap: () => _navigateToPokemonDetails(pokemon),
-    ),
-  );
+  PagedChildBuilderDelegate<Pokemon> getPagedChildBulder([
+    double? fixedHeight,
+  ]) =>
+      PagedChildBuilderDelegate<Pokemon>(
+        itemBuilder: (context, pokemon, index) => InkWell(
+          child: PokemonCard(pokemon, fixedHeight: fixedHeight),
+          onTap: () => _navigateToPokemonDetails(pokemon),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +66,15 @@ class _PokemonsListState extends State<PokemonsList> {
           ? PagedListView(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
               pagingController: _pagingController,
-              builderDelegate: pagedChildBulder)
+              builderDelegate: getPagedChildBulder(300),
+            )
           : PagedGridView(
               showNewPageErrorIndicatorAsGridChild: false,
               showNewPageProgressIndicatorAsGridChild: false,
               showNoMoreItemsIndicatorAsGridChild: false,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
               pagingController: _pagingController,
-              builderDelegate: pagedChildBulder,
+              builderDelegate: getPagedChildBulder(),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: _getMaxCellWidth(screenWidth),
                 childAspectRatio: 110 / 186,
@@ -80,11 +84,14 @@ class _PokemonsListState extends State<PokemonsList> {
   }
 
   double _getMaxCellWidth(double screenWidth) {
-    if (screenWidth > 1200) {
+    if (screenWidth >= 1200) {
       return 350;
     }
-    if (screenWidth > 768) {
+    if (screenWidth >= 768) {
       return 250;
+    }
+    if (screenWidth >= 400) {
+      return 150;
     }
     return 200;
   }

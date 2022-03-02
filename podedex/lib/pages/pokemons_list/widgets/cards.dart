@@ -6,7 +6,7 @@ import '../../core_widgets.dart';
 
 /// A Pokemon Card
 ///
-/// A Card that show a sommary of a [Pokemon] (image, name, types and id).
+/// A Card that show a summary of a [Pokemon] (image, name, types and id).
 class PokemonCard extends StatelessWidget {
   final Pokemon _pokemon;
   final double? fixedHeight;
