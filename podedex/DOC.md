@@ -27,8 +27,8 @@ Beside the two packages I have mentioned earlier, I use the follorwing:
 
 ## References 
 
-- The `RoundedTabIndicator` in `lib\pages\pokemons_list\widgets\simple_widgets.dart`
-was __inspired__ by these to samples:
+- The `RoundedTabIndicator` in `lib\pages\core_widgets.dart`
+was __inspired__ by these two samples:
   - A medium [post](https://medium.com/swlh/flutter-custom-tab-indicator-for-tabbar-d72bbc6c9d0c)
   - And a StackOverflow [answer](https://stackoverflow.com/a/60207984/11672037)
 - The `RoundedTrackShape` in `lib\pages\pokemon_details\widgets.dart` is a customized version of this [class](https://github.com/flutter/flutter/blob/e85ba6eeae679e776792f8cacd10ebdd7707eecb/packages/flutter/lib/src/material/slider_theme.dart#L1624) from the official flutter repository on Github.

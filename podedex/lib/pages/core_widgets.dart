@@ -56,7 +56,7 @@ class ImageDominantColor extends StatefulWidget {
   final EdgeInsets imagePadding;
 
   /// The alpha to apply to the [image]'s dominant color before set it as the
-  /// background. Default to `100`.
+  /// background. Default to `50`.
   final int colorAlpha;
 
   final void Function(Color)? onDominantColorPicked;
@@ -81,7 +81,7 @@ class _ImageDominantColorState extends State<ImageDominantColor> {
   Widget build(BuildContext context) {
     return FutureBuilder<PaletteGenerator>(
       future: PaletteGenerator.fromImageProvider(widget.image.image),
-      builder: ((context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           final dominantColor = snapshot.data?.dominantColor?.color;
           if (dominantColor != null) {
@@ -97,7 +97,7 @@ class _ImageDominantColorState extends State<ImageDominantColor> {
           color: imageDominantColor,
           child: widget.image,
         );
-      }),
+      },
     );
   }
 }
