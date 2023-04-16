@@ -1,3 +1,5 @@
+[![test: passing](https://github.com/sitatec/pokemons/actions/workflows/main.yml/badge.svg)](https://github.com/sitatec/pokemons/actions) [![codecov](https://codecov.io/gh/sitatec/pokemons/branch/main/graph/badge.svg)](https://codecov.io/gh/sitatec/pokemons)
+
 # podedex
 Build for mobile, tablet and Desktop screens. Also support web.
 
