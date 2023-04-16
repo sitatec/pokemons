@@ -1,4 +1,10 @@
 # podedex
+Build for mobile, tablet and Desktop screens. Also support web.
+
+[demo.webm](https://user-images.githubusercontent.com/62622509/232266966-4c7395e3-1abc-4f1f-927e-c91a567879b6.webm)
+
+
+https://user-images.githubusercontent.com/62622509/232266935-eb7a0ef9-afbf-4c16-8830-21cb257c3ffc.mov
 
 ## Build
 Run `flutter pub get`.
