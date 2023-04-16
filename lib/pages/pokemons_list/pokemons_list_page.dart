@@ -126,10 +126,7 @@ class _TabBar extends StatelessWidget {
           radius: 4,
           indicatorHeight: 4,
         ),
-        tabs: const [
-          SizedBox(height: 50, child: Tab(child: Text("All Pokemons"))),
-          _FavoriteTab()
-        ],
+        tabs: const [SizedBox(height: 50, child: Tab(child: Text("All Pokemons"))), _FavoriteTab()],
       ),
     );
   }
@@ -151,13 +148,13 @@ class _FavoriteTabState extends State<_FavoriteTab> {
   @override
   void initState() {
     super.initState();
-    _fetchfavoritePokemonsCount();
-    favoritePokemonsStore.addListener(_fetchfavoritePokemonsCount);
+    _fetchFavoritePokemonsCount();
+    favoritePokemonsStore.addListener(_fetchFavoritePokemonsCount);
   }
 
-  void _fetchfavoritePokemonsCount() {
+  void _fetchFavoritePokemonsCount() {
     favoritePokemonsStore.favoritePokemonsCount.then((value) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() => favoritePokemonsCount = value);
       });
     });

@@ -13,8 +13,7 @@ import '../../domain/entities/pokemon.dart';
 class PokemonDetailsPage extends StatefulWidget {
   final Pokemon _pokemon;
   final PokemonDetailsBloc _bloc;
-  const PokemonDetailsPage(this._pokemon, this._bloc, {Key? key})
-      : super(key: key);
+  const PokemonDetailsPage(this._pokemon, this._bloc, {Key? key}) : super(key: key);
 
   @override
   _PokemonDetailsPageState createState() => _PokemonDetailsPageState();
@@ -65,7 +64,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
   }
 
   void _updateHeaderBackgroundColor(Color newColor) {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => headerBackgroundColor = newColor);
     });
   }
@@ -84,8 +83,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
           SliverAppBar(
             pinned: true,
             backgroundColor: headerBackgroundColor.withOpacity(1),
-            expandedHeight:
-                216 + _PokemonCharacteristics.height + kToolbarHeight,
+            expandedHeight: 216 + _PokemonCharacteristics.height + kToolbarHeight,
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               background: Container(
@@ -111,8 +109,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
                         width: 150,
                         height: 150,
                       ),
-                      imagePadding:
-                          const EdgeInsets.only(right: 5, bottom: 68.5),
+                      imagePadding: const EdgeInsets.only(right: 5, bottom: 68.5),
                       onDominantColorPicked: _updateHeaderBackgroundColor,
                     ),
                     _PokemonInfo(pokemon: pokemon),
@@ -153,10 +150,8 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
           duration: const Duration(milliseconds: 300),
           child: TextButton(
             onPressed: bloc.toggleFavoriteSate,
-            child: Text(
-                isFavorite ? "Remove from favourites" : "Mark as favourite"),
-            style:
-                isFavorite ? isFavoriteButtonStyle : isNotFavoriteButtonStyle,
+            child: Text(isFavorite ? "Remove from favourites" : "Mark as favourite"),
+            style: isFavorite ? isFavoriteButtonStyle : isNotFavoriteButtonStyle,
           ),
         ),
       ),
@@ -165,8 +160,7 @@ class _PokemonDetailsPageState extends State<PokemonDetailsPage> {
 }
 
 class _PokemonInfo extends StatelessWidget {
-  static const _smallTextStyle =
-      TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
+  static const _smallTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
 
   final Pokemon pokemon;
   const _PokemonInfo({
@@ -177,8 +171,7 @@ class _PokemonInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(
-          left: 16, bottom: 92, top: kToolbarHeight * 1.8),
+      padding: const EdgeInsets.only(left: 16, bottom: 92, top: kToolbarHeight * 1.8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
